@@ -1,78 +1,72 @@
 import streamlit as st
-import time
 
-# 1. إعدادات الواجهة الرياضية والوضوح العالي
-st.set_page_config(page_title="Zuhour Fitness 2026", page_icon="⚖️", layout="centered")
+# 1. إعدادات الواجهة الاحترافية 2026
+st.set_page_config(page_title="Zuhour Fitness Elite", page_icon="🧘‍♀️", layout="centered")
 
 st.markdown("""
     <style>
-    .stApp { background: linear-gradient(135deg, #00B4DB 0%, #0083B0 100%); }
+    .stApp { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
     div[data-testid="stVerticalBlock"] > div {
         background-color: #FFFFFF !important; 
-        border-radius: 20px; padding: 25px;
-        border-right: 12px solid #FF8C00;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        border-radius: 30px; padding: 30px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        border-top: 10px solid #00d2ff;
     }
-    h1, h2, h3, p, label { color: #000000 !important; font-weight: 900 !important; }
+    h1, h2, h3, p, label { color: #2c3e50 !important; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     .stButton > button {
-        background-color: #FF8C00 !important; color: white !important;
-        font-weight: bold; height: 50px; border-radius: 15px; width: 100%;
+        background: linear-gradient(to right, #00d2ff, #3a7bd5) !important;
+        color: white !important; font-weight: bold; border-radius: 15px;
+        height: 50px; border: none;
     }
     </style>
     """, unsafe_allow_html=True)
 
-st.title("⚖️ حاسبة الرشاقة والوزن المثالي")
+# 2. إضافة صورة فتاة تتمرن (شكل مبهج)
+col_img, col_txt = st.columns([1, 2])
+with col_img:
+    # رابط لصورة متحركة لفتاة تمارس الرياضة لتعطي روحاً للموقع
+    st.image("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJieHlxbm5qbm5qbm5qbm5qbm5qbm5qbm5qbm5qbm5qbm5qJmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/3o7TKMGpxxygWvS8Y8/giphy.gif", width=150)
+with col_txt:
+    st.title("أهلاً بكِ في عالم الرشاقة")
+    st.write("رحلتكِ نحو الـ 55 كجم تبدأ بابتسامة وإصرار! ✨")
 
-# --- القسم الجديد: حساب الوزن المثالي بناءً على الطول ---
-st.subheader("📏 تنسيق الوزن المثالي")
-col_h, col_w = st.columns(2)
-
-with col_h:
-    h = st.number_input("أدخلي طولكِ (سم):", min_value=120, max_value=220, value=160)
-with col_w:
-    w = st.number_input("وزنكِ الحالي (كجم):", min_value=30.0, value=65.0)
-
-# معادلة الوزن المثالي والـ BMI
-ideal_w = h - 105
-bmi = w / ((h/100)**2)
-
-st.info(f"💡 الوزن المثالي المقترح لطولكِ هو: {ideal_w} كجم")
-
-# تحليل النتيجة
-if w > ideal_w:
-    st.warning(f"🎯 متبقي لكِ {w - ideal_w:.1f} كجم للوصول للمثالي. استمري!")
-elif w == ideal_w:
-    st.success("🎉 مذهل! أنتِ في الوزن المثالي تماماً.")
-else:
-    st.info(f"✨ أنتِ تحت الوزن المثالي بـ {abs(w - ideal_w):.1f} كجم.")
-
-st.divider()
-
-# --- قسم شرب الماء ---
-st.subheader("🥤 عداد شرب الماء")
-if 'water' not in st.session_state:
-    st.session_state.water = 0
-
-c1, c2 = st.columns([2, 1])
+# --- القسم 1: القياسات والوزن المثالي ---
+st.subheader("📏 قياسات الجسم والهدف")
+c1, c2 = st.columns(2)
 with c1:
-    st.write(f"الأكواب: {st.session_state.water} / 12")
-    st.progress(min(st.session_state.water / 12, 1.0))
+    h = st.number_input("الطول (سم):", value=160)
 with c2:
-    if st.button("🥤 إضافة كوب"):
-        st.session_state.water += 1
+    w = st.number_input("الوزن الحالي (كجم):", value=65.0)
 
+ideal_w = h - 105
+st.info(f"💡 الوزن المثالي المقترح لكِ عالمياً هو: {ideal_w} كجم")
+
+# --- القسم 2: عداد الماء والكاميرا الخلفية ---
 st.divider()
+st.subheader("💧 شرب الماء وتوثيق الوجبات")
+if 'water' not in st.session_state: st.session_state.water = 0
 
-# --- قسم ترشيح التمارين AI ---
-st.subheader("🤖 ترشيح تمارين الذكاء الاصطناعي")
-plan = st.text_area("ألصقي خطتكِ التدريبية هنا:")
+col_w, col_cam = st.columns(2)
+with col_w:
+    if st.button("🥤 إضافة كوب ماء"):
+        st.session_state.water += 1
+    st.write(f"الأكواب: {st.session_state.water} / 12")
+
+with col_cam:
+    food_photo = st.camera_input("📷 تصوير الوجبة (خلفية)")
+
+# --- القسم 3: التمارين العالمية الموثوقة ---
+st.divider()
+st.subheader("🤖 ترشيح التمارين (محتوى عالمي)")
+plan = st.text_area("ما هو هدف تمرين اليوم؟ (مثلاً: نحت، حرق، شد)")
+
 if plan:
-    # روابط 2026 نشطة
-    if any(word in plan.lower() for word in ["نحت", "بيلاتس", "خصر"]):
-        v_url = "https://www.youtube.com/watch?v=U4_lVjsOVBs"
+    if any(word in plan.lower() for word in ["نحت", "خصر"]):
+        url = "https://www.youtube.com/watch?v=3Pr6n-nKnAA" # Emi Wong
+        st.success("تم اختيار تمرين 'Emi Wong' العالمي لنحت الخصر")
     else:
-        v_url = "https://www.youtube.com/watch?v=v2r0zYnFmxo"
-    st.link_button("🚀 ابدأ التمرين المرشح الآن", v_url)
+        url = "https://www.youtube.com/watch?v=2MoGxae-zyo" # Chloe Ting
+        st.success("تم اختيار تحدي 'Chloe Ting' لحرق الدهون")
+    st.link_button("▶️ ابدأ التمرين الآن", url)
 
-# --- إصلاح شريط المعلومات الجانبي (حل مشكلة الخطأ) ---
-st.sidebar.markdown(f"### ملخص البيانات\nالطول: {h} سم\nالوزن: {w} كجم\nالهدف: {ideal_w} كجم")
+st.sidebar.markdown(f"### سجل زهور ✨\nالوزن: {w} كجم\nالهدف: {ideal_w} كجم")
