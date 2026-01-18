@@ -1,87 +1,85 @@
 import streamlit as st
 
-# 1. إعدادات الهوية البصرية (ثيم روز الرياضي)
-st.set_page_config(page_title="Zuhour AI Coach 2026", page_icon="🧘‍♀️", layout="centered")
+# 1. إعدادات الصفحة
+st.set_page_config(page_title="Zuhour AI Fitness 2026", page_icon="🌸", layout="centered")
 
+# تنسيق CSS احترافي
 st.markdown("""
     <style>
     .stApp { background: linear-gradient(135deg, #FFF5F7 0%, #FFE4E1 100%); }
     .main-card {
         background-color: white; border-radius: 20px; padding: 25px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-left: 8px solid #FF69B4;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-right: 8px solid #FF69B4;
         margin-bottom: 20px;
     }
     h1, h2, h3 { color: #D81B60 !important; text-align: center; }
-    .stButton > button { background: #FF69B4 !important; color: white !important; border-radius: 20px; width: 100%; }
+    .stButton > button { background: #FF69B4 !important; color: white !important; border-radius: 15px; }
     </style>
     """, unsafe_allow_html=True)
 
-# صورة الفتاة الرياضية (GIF)
-st.markdown("<center><img src='https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHF4c3c3eXF4c3c3eXF4c3c3eXF4c3c3eXF4c3c3eXF4c3c3ZSZjdD1z/L40pC6N0H4h0E/giphy.gif' width='200'></center>", unsafe_allow_html=True)
-st.title("🌸 مدرب زهور الذكي")
+# 2. عرض صورة الفتاة الرياضية (رابط جديد ومباشر)
+st.markdown("<center><img src='https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHF4c3c3eXF4c3c3eXF4c3c3eXF4c3c3eXF4c3c3eXF4c3c3ZSZjdD1z/L40pC6N0H4h0E/giphy.gif' width='220' alt='Fitness Girl'></center>", unsafe_allow_html=True)
 
-# --- القسم الأول: محرك الذكاء الاصطناعي للتشخيص والهدف ---
+st.title("🌸 مدرب زهور الخاص")
+
+# --- القسم الأول: قياسات الهدف ---
 st.markdown('<div class="main-card">', unsafe_allow_html=True)
-st.subheader("🔍 تشخيص الحالة وتحديد الهدف")
-c1, c2 = st.columns(2)
-with c1:
-    h = st.number_input("الطول (سم):", value=160)
-with c2:
-    w = st.number_input("الوزن الحالي (كجم):", value=65.0)
+st.subheader("📏 تحديث الوزن والهدف")
+c1, c2, c3 = st.columns(3)
+with c1: h = st.number_input("الطول:", value=160)
+with c2: w = st.number_input("الوزن الحالي:", value=65.0)
+with c3: target = st.number_input("الهدف:", value=55.0)
 
-target_w = st.number_input("الوزن المستهدف الذي تريدين الوصول إليه (كجم):", value=55.0)
-
-# حسابات الذكاء الاصطناعي
-diff = w - target_w
-bmi = w / ((h/100)**2)
-
-if diff > 0:
-    st.warning(f"🎯 متبقي لكِ {diff:.1f} كجم للوصول لهدفك ({target_w} كجم).")
-else:
-    st.success(f"🎉 مذهل! لقد وصلتِ لهدفكِ المستهدف.")
-
-# تشخيص الذكاء الاصطناعي للفيديو المناسب
-if bmi > 24:
-    ai_status = "حالة حرق دهون (Cardio Focus)"
-    rec_video = "https://www.youtube.com/watch?v=2MoGxae-zyo" # Chloe Ting
-    rec_name = "تحدي حرق الدهون العالمي (كلو تينغ)"
-else:
-    ai_status = "حالة نحت وشد (Sculpting Focus)"
-    rec_video = "https://www.youtube.com/watch?v=3Pr6n-nKnAA" # Emi Wong
-    rec_name = "تمرين نحت الخصر العالمي (إيمي ونغ)"
-
-st.markdown(f"🤖 ترشيح الذكاء الاصطناعي بناءً على حالتكِ:")
-st.info(f"الحالة المكتشفة: {ai_status}")
-st.link_button(f"▶️ ابدئي التمرين المرشح: {rec_name}", rec_video)
+diff = w - target
+st.write(f"💪 متبقي لكِ {diff:.1f} كجم للوصول للهدف!")
 st.markdown('</div>', unsafe_allow_html=True)
 
-# --- القسم الثاني: جدول الأسبوع الشامل (الفيديوهات المرفوعة سابقاً) ---
-st.divider()
-st.subheader("📅 قائمة تمارين الأسبوع (المحتوى الموثوق)")
-day = st.selectbox("اختر اليوم لرؤية الفيديو الخاص به:", ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"])
+# --- القسم الثاني: مستشار الذكاء الاصطناعي (المربع الذي طلبتِه) ---
+st.markdown('<div class="main-card">', unsafe_allow_html=True)
+st.subheader("🤖 مستشار التمارين الذكي")
+st.write("ألصقي خطتكِ التي حصلتِ عليها أو صفي حالتكِ هنا، وسأرشح لكِ الفيديو الأنسب فوراً:")
+user_plan = st.text_area("مثال: خطتي اليوم هي نحت البطن والخصر...", placeholder="اكتبي هنا...")
 
-training_data = {
-    "الأحد": {"type": "حرق كامل للجسم", "url": "https://www.youtube.com/watch?v=2MoGxae-zyo"},
-    "الاثنين": {"type": "نحت الخصر والبطن", "url": "https://www.youtube.com/watch?v=3Pr6n-nKnAA"},
-    "الثلاثاء": {"type": "بيلاتس ومرونة", "url": "https://www.youtube.com/watch?v=U4_lVjsOVBs"},
-    "الأربعاء": {"type": "راحة إيجابية", "url": "https://www.youtube.com/watch?v=v2r0zYnFmxo"},
-    "الخميس": {"type": "كارديو مكثف", "url": "https://www.youtube.com/watch?v=ml6cT4AZdqI"},
-    "الجمعة": {"type": "يوجا واسترخاء", "url": "https://www.youtube.com/watch?v=Eml2xnoLpYE"},
-    "السبت": {"type": "تمارين قوة", "url": "https://www.youtube.com/watch?v=gC_L9qAHVJ8"}
+if user_plan:
+    st.write("🔍 جاري تحليل خطتكِ وترشيح التمارين...")
+    # محرك تحليل النص الذكي
+    if any(word in user_plan for word in ["نحت", "خصر", "بيلاتس", "شد"]):
+        vid_url = "https://www.youtube.com/watch?v=3Pr6n-nKnAA"
+        vid_name = "تمرين Emi Wong لنحت الخصر (المطابق لخطتك)"
+    elif any(word in user_plan for word in ["حرق", "دهون", "كارديو", "سريع"]):
+        vid_url = "https://www.youtube.com/watch?v=2MoGxae-zyo"
+        vid_name = "تحدي Chloe Ting لحرق الدهون (المطابق لخطتك)"
+    else:
+        vid_url = "https://www.youtube.com/watch?v=v2r0zYnFmxo"
+        vid_name = "تمرين شامل للياقة الجسم"
+    
+    st.success(f"✅ تم تحليل خطتك بنجاح! الفيديو المرشح: {vid_name}")
+    st.link_button("🚀 ابدئي التمرين الآن", vid_url)
+st.markdown('</div>', unsafe_allow_html=True)
+
+# --- القسم الثالث: جدول الأسبوع ---
+st.divider()
+st.subheader("📅 جدول تمارين الأسبوع المعتمد")
+day = st.selectbox("اختر اليوم:", ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"])
+week_videos = {
+    "الأحد": "https://www.youtube.com/watch?v=2MoGxae-zyo",
+    "الاثنين": "https://www.youtube.com/watch?v=3Pr6n-nKnAA",
+    "الثلاثاء": "https://www.youtube.com/watch?v=U4_lVjsOVBs",
+    "الأربعاء": "https://www.youtube.com/watch?v=v2r0zYnFmxo",
+    "الخميس": "https://www.youtube.com/watch?v=ml6cT4AZdqI",
+    "الجمعة": "https://www.youtube.com/watch?v=Eml2xnoLpYE",
+    "السبت": "https://www.youtube.com/watch?v=gC_L9qAHVJ8"
 }
+st.link_button(f"▶️ فتح تمرين يوم {day}", week_videos[day])
 
-st.success(f"💪 تمرين {day}: {training_data[day]['type']}")
-st.link_button(f"▶️ فتح فيديو يوم {day}", training_data[day]['url'])
-
-# --- القسم الثالث: الماء والكاميرا ---
+# --- القسم الرابع: الكاميرا والماء ---
 st.divider()
-cw, cc = st.columns(2)
-with cw:
-    if 'glasses' not in st.session_state: st.session_state.glasses = 0
-    st.write(f"🥤 الماء: {st.session_state.glasses}/12")
-    if st.button("➕ كوب"): st.session_state.glasses += 1
-with cc:
-    st.write("📸 سجل الوجبات")
-    st.camera_input("التقطي صورة (خلفية 🔄)", key="cam")
+c_water, c_cam = st.columns(2)
+with c_water:
+    if 'w' not in st.session_state: st.session_state.w = 0
+    if st.button("🥤 إضافة ماء"): st.session_state.w += 1
+    st.write(f"الماء: {st.session_state.w}/12")
+with c_cam:
+    st.camera_input("📸 تصوير الوجبة (خلفية 🔄)")
 
-st.sidebar.markdown(f"### 📊 ملخص روز\nالحالي: {w} كجم\nالمستهدف: {target_w} كجم\nالفرق: {diff:.1f} كجم")
+st.sidebar.markdown(f"### 📊 سجل روز\nالحالي: {w}\nالهدف: {target}")
