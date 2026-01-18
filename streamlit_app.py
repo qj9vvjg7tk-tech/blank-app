@@ -2,133 +2,125 @@ import streamlit as st
 import time
 from datetime import datetime
 
-# 1. إعدادات الواجهة (تجعل التطبيق يتكيف مع الشاشات المختلفة)
-st.set_page_config(page_title="Rose Health", page_icon="🌸", layout="centered")
+# 1. إعدادات الهوية البصرية (Apple Style) - نصوص واضحة جداً
+st.set_page_config(page_title="Rose Smart Fitness", page_icon="🌸", layout="centered")
 
-# تطبيق لغة التصميم (Apple Style - Soft UI)
 st.markdown("""
     <style>
-    /* خلفية متدرجة ناعمة تناسب جميع الأجهزة */
-    .stApp {
-        background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+    .stApp { background: linear-gradient(180deg, #FDFCFB 0%, #E2D1C3 100%); }
+    /* نصوص كحلية داكنة جداً لضمان الوضوح التام */
+    h1, h2, h3, p, label, span, div { 
+        color: #1A2E35 !important; 
+        font-family: -apple-system, sans-serif;
+        font-weight: 700 !important;
     }
-    
-    /* تصميم البطاقات "Floating Cards" بلمسة آيفون */
-    div.stButton > button, div.stSelectbox, div.stNumberInput, .stTextArea, .stAlert {
-        background-color: rgba(255, 255, 255, 0.7) !important;
-        backdrop-filter: blur(10px); /* تأثير الزجاج الضبابي المشهور في آيفون */
-        border-radius: 20px !important;
-        border: 1px solid rgba(255, 255, 255, 0.5) !important;
-        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07) !important;
-        transition: all 0.3s ease;
+    div[data-testid="stVerticalBlock"] > div {
+        background-color: rgba(255, 255, 255, 0.7);
+        border-radius: 25px;
+        padding: 20px;
+        margin-bottom: 15px;
+        border: 1px solid rgba(255,255,255,0.5);
     }
-
-    /* العناوين بلون داكن فخم وواضح */
-    h1, h2, h3 { 
-        color: #333333 !important; 
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        letter-spacing: -0.5px;
+    .stButton > button {
+        background-color: #F3C3B2 !important; 
+        color: #1A2E35 !important;
+        border-radius: 20px;
+        border: 2px solid #1A2E35;
+        font-weight: bold;
+        width: 100%;
     }
-
-    /* تخصيص الأزرار لتكون بارزة وسهلة الضغط بالأصابع */
-    .stButton>button {
-        background: #FF007F !important; /* لون فوشيا قوي */
-        color: white !important;
-        font-weight: 600 !important;
-        padding: 12px !important;
-    }
-
-    /* جعل شريط التقدم أنحف وأكثر أناقة */
-    .stProgress > div > div > div > div {
-        background-color: #FF007F !important;
-        height: 8px !important;
-    }
+    .stProgress > div > div > div > div { background-color: #99CDD8 !important; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- ترويسة التطبيق ---
-st.title("🌸 الروتين الصحي مع روز")
-day_name = datetime.now().strftime("%A")
-st.caption(f"✨ مرحباً بكِ اليوم {day_name} في رحلة الـ 55 كجم")
+st.title("🌸 مدرب روز المتكامل")
 
-# 2. نصيحة اليوم (بطاقة ذكية)
-st.info("💡 هدف اليوم الصغير: حاولي تقليل الملح في وجباتكِ لتجنب حبس السوائل.")
+# 2. قسم المدخلات الذكية (قابلة للتغيير بالكامل)
+st.subheader("📊 ملفكِ البدني الشخصي")
+c1, c2, c3 = st.columns(3)
+with c1:
+    height = st.number_input("طولكِ (سم):", value=160, step=1)
+with c2:
+    current_w = st.number_input("وزنكِ الحالي (كجم):", value=60.0, step=0.1)
+with c3:
+    target_w = st.number_input("هدفكِ (كجم):", value=55.0, step=0.1)
 
-# 3. قسم النشاط اليومي (مرتب في أعمدة تتغير حسب حجم الشاشة)
-col1, col2 = st.columns(2)
+# --- العمليات الحسابية الذكية ---
+# 1. مؤشر كتلة الجسم (BMI)
+bmi = current_w / ((height / 100) ** 2)
+# 2. السعرات الحرارية التقريبية (BMR مبسط) للحفاظ على الوزن
+calories = (10 * current_w) + (6.25 * height) - (5 * 25) + 5 # تقدير لسن 25
+# 3. السعرات المطلوبة لخسارة الوزن بأمان
+target_calories = calories - 400
 
-with col1:
-    st.markdown("### 💧 الهيدرات")
-    if 'water' not in st.session_state: st.session_state.water = 0
-    c1, c2 = st.columns([1, 1])
-    with c1:
-        if st.button("🥤 إضافة"): st.session_state.water += 1
-    with c2:
-        st.write(f"{st.session_state.water} / 12")
-    st.progress(min(st.session_state.water / 12, 1.0))
+# 3. لوحة التحليل الذكي
+st.markdown("### 🤖 تحليل المدرب")
+col_bmi, col_cal = st.columns(2)
 
-with col2:
-    st.markdown("### 📈 الميزان")
-    cw = st.number_input("الحالي:", value=60.0, step=0.1, key="weight_input")
-    target = st.number_input("الهدف:", value=55.0, step=0.1, key="target_input")
+with col_bmi:
+    if bmi < 18.5: status = "نحافة"; rec_cat = "تمارين نيكول (Move With Nicole)"
+    elif 18.5 <= bmi < 25: status = "مثالي"; rec_cat = "تمارين كلو تينج (Chloe Ting)"
+    else: status = "زيادة بسيطة"; rec_cat = "كارديو ومشي منزلي"
+    st.metric("مؤشر الكتلة (BMI)", f"{bmi:.1f}", status)
+
+with col_cal:
+    st.metric("السعرات المقترحة", f"{int(target_calories)} سعرة", "-400 يومياً")
+
+st.info(f"💡 نصيحة روز: للوصول إلى {target_w} كجم، ركزي على {rec_cat} واشربي الكثير من الماء!")
 
 st.divider()
 
-# 4. سجل القياسات (تخطيط مرن)
-st.markdown("### 📏 قياسات الجسم الأسبوعية")
-m1, m2, m3 = st.columns(3)
-with m1: st.number_input("الخصر (سم):", value=70)
-with m2: st.number_input("الأرداف (سم):", value=90)
-with m3: st.number_input("الذراع (سم):", value=25)
+# 4. قسم الإحماء والتمدد (Safety First)
+st.subheader("🧘 تمدد وإحماء (قبل البدء)")
+warmups = {
+    "إحماء كامل الجسم (Nicole)": "https://www.youtube.com/watch?v=i9Yp99S9-hU",
+    "تمدد سريع (5 دقائق)": "https://www.youtube.com/watch?v=2MoGxae-zyo"
+}
+sel_warm = st.selectbox("اختاري الإحماء:", list(warmups.keys()))
+st.link_button("▶️ ابدأ الإحماء المباشر", warmups[sel_warm])
 
 st.divider()
 
-# 5. مكتبة الفيديو (القائمة الكاملة بقوة بصرية)
-st.markdown("### 📺 مكتبة التمارين المحدثة")
-cat = st.selectbox("اكتشفي الفئات:", ["Pilates + Hip Dips", "Low-Impact Cardio", "Walk"])
-
-videos = {
-    "Pilates + Hip Dips": {
-        "Move With Nicole – 20 Min Pilates Abs": "https://www.youtube.com/watch?v=NxX9p8W09I8",
-        "Move With Nicole – Side Leg Lifts": "https://www.youtube.com/watch?v=v76L87Xq1E0",
-        "Move With Nicole – Pilates Booty": "https://www.youtube.com/watch?v=0_37Lh_XFmE",
-        "Move With Nicole – Glute Bridges": "https://www.youtube.com/watch?v=f639W1Xf3wM",
-        "Blogilates – Pilates Arms": "https://www.youtube.com/watch?v=hAGfBjvIRFI",
-        "Blogilates – Curtsy Lunges": "https://www.youtube.com/watch?v=Lp_9m2M7mS4"
+# 5. مكتبة التمارين الشاملة
+st.subheader("📺 تمارينكِ المخصصة اليوم")
+all_videos = {
+    "تمارين كلو تينج (Chloe Ting)": {
+        "تحدي عضلات البطن": "https://www.youtube.com/watch?v=2MoGxae-zyo",
+        "شد الجسم بالكامل": "https://www.youtube.com/watch?v=2pLT-olgUJs"
     },
-    "Low-Impact Cardio": {
-        "Grow With Jo – Cardio": "https://www.youtube.com/watch?v=gC_L9qAHVJ8",
-        "Grow With Jo – Walk & Dance": "https://www.youtube.com/watch?v=8p_h2L_L8X8"
+    "تمارين نيكول (Move With Nicole)": {
+        "بيلاتس نحت الجسم": "https://www.youtube.com/watch?v=NxX9p8W09I8",
+        "بيلاتس كامل الجسم": "https://www.youtube.com/watch?v=K-PpDUpniz4"
     },
-    "Walk": {
-        "Leslie – 30 Min Walk": "https://www.youtube.com/watch?v=enYITYwvPAQ"
+    "كارديو ومشي منزلي": {
+        "كارديو حرق الدهون": "https://www.youtube.com/watch?v=gC_L9qAHVJ8",
+        "مشي سريع - Leslie": "https://www.youtube.com/watch?v=enYITYwvPAQ"
     }
 }
 
-selected_vid = st.selectbox("اختاري الفيديو المفضل:", list(videos[cat].keys()))
-st.link_button(f"▶️ تشغيل: {selected_vid}", videos[cat][selected_vid])
+# اختيار الفئة بناءً على التحليل أو الاختيار الشخصي
+final_cat = st.selectbox("الفئة:", list(all_videos.keys()), index=list(all_videos.keys()).index(rec_cat))
+sel_main = st.selectbox("التمرين الأساسي:", list(all_videos[final_cat].keys()))
+st.link_button(f"🚀 فتح {sel_main} في يوتيوب", all_videos[final_cat][sel_main])
 
 st.divider()
-# 6. الأدوات (Tabs مرتبة للموبايل)
-st.markdown("### ⚙️ الأدوات المساعدة")
-t_timer, t_cam, t_note = st.tabs(["⏱️ مؤقت", "📸 وجبة", "📝 مفكرة"])
-
-with t_timer:
-    sec = st.number_input("ثواني التمرين:", value=30)
-    if st.button("🚀 ابدأ الآن"):
+# 6. الأدوات اليومية (الماء، القياسات، المؤقت)
+tabs = st.tabs(["💧 الماء", "📏 القياسات", "⏱️ المؤقت"])
+with tabs[0]:
+    if 'water' not in st.session_state: st.session_state.water = 0
+    if st.button("🥤 إضافة كوب"): st.session_state.water += 1
+    st.write(f"الهدف اليومي: {st.session_state.water}/12")
+    st.progress(min(st.session_state.water / 12, 1.0))
+with tabs[1]:
+    st.number_input("الخصر (سم):", value=70)
+    st.number_input("الأرداف (سم):", value=90)
+with tabs[2]:
+    sec = st.number_input("المؤقت (ثواني):", value=30)
+    if st.button("🏁 ابدأ الآن"):
         ph = st.empty()
         for i in range(sec, 0, -1):
-            ph.write(f"⌛ المتبقي: {i}")
+            ph.write(f"⏳ المتبقي: {i} ثانية")
             time.sleep(1)
-        ph.write("🔥 انتهى الوقت! بطلة!")
+        ph.success("✅ بطلة يا روز! انتهى الوقت.")
 
-with t_cam:
-    st.file_uploader("ارفعي صورة (خلفية)", type=["jpg", "png"])
-    st.camera_input("تصوير مباشر (أمامية)")
-
-with t_note:
-    st.text_area("عن ماذا تفكرين اليوم؟")
-    if st.button("✅ حفظ"): st.toast("تم الحفظ!")
-
-st.sidebar.markdown("---")
-st.sidebar.info("💡 تطبيق روز: مصمم ليعمل بكفاءة على جميع أجهزتكِ.")
+st.sidebar.caption("روز فيتنس • تحليل ذكي • روابط مباشرة")
