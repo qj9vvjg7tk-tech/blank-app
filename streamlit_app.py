@@ -1,72 +1,79 @@
 import streamlit as st
 
-# 1. إعدادات الواجهة الاحترافية 2026
-st.set_page_config(page_title="Zuhour Fitness Elite", page_icon="🧘‍♀️", layout="centered")
+# إعدادات الواجهة
+st.set_page_config(page_title="Zuhour AI Coach", page_icon="🤖", layout="centered")
 
+# تنسيق مبهج مع الفتاة الرياضية
 st.markdown("""
     <style>
-    .stApp { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
-    div[data-testid="stVerticalBlock"] > div {
-        background-color: #FFFFFF !important; 
-        border-radius: 30px; padding: 30px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        border-top: 10px solid #00d2ff;
-    }
-    h1, h2, h3, p, label { color: #2c3e50 !important; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    .stButton > button {
-        background: linear-gradient(to right, #00d2ff, #3a7bd5) !important;
-        color: white !important; font-weight: bold; border-radius: 15px;
-        height: 50px; border: none;
+    .stApp { background: linear-gradient(135deg, #e0f7fa 0%, #80deea 100%); }
+    .main-box {
+        background-color: white; border-radius: 25px; padding: 25px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.1); border-top: 8px solid #FF8C00;
     }
     </style>
     """, unsafe_allow_html=True)
 
-# 2. إضافة صورة فتاة تتمرن (شكل مبهج)
-col_img, col_txt = st.columns([1, 2])
-with col_img:
-    # رابط لصورة متحركة لفتاة تمارس الرياضة لتعطي روحاً للموقع
-    st.image("https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHJieHlxbm5qbm5qbm5qbm5qbm5qbm5qbm5qbm5qbm5qbm5qJmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/3o7TKMGpxxygWvS8Y8/giphy.gif", width=150)
-with col_txt:
-    st.title("أهلاً بكِ في عالم الرشاقة")
-    st.write("رحلتكِ نحو الـ 55 كجم تبدأ بابتسامة وإصرار! ✨")
+# عرض الفتاة الرياضية في المقدمة بشكل مبهج
+st.markdown("<center><img src='https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHF4c3c3eXF4c3c3eXF4c3c3eXF4c3c3eXF4c3c3eXF4c3c3ZSZjdD1z/3o7TKVUn7iM8FMEU24/giphy.gif' width='180'></center>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: #00796b;'>🤖 نظام التشخيص الرياضي الذكي</h1>", unsafe_allow_html=True)
 
-# --- القسم 1: القياسات والوزن المثالي ---
-st.subheader("📏 قياسات الجسم والهدف")
-c1, c2 = st.columns(2)
-with c1:
-    h = st.number_input("الطول (سم):", value=160)
-with c2:
-    w = st.number_input("الوزن الحالي (كجم):", value=65.0)
+# --- محرك التشخيص (المدخلات) ---
+with st.container():
+    st.subheader("🔍 تشخيص الحالة البدنية")
+    col1, col2 = st.columns(2)
+    with col1:
+        h = st.number_input("الطول (سم):", value=160)
+    with col2:
+        w = st.number_input("الوزن (كجم):", value=65.0)
 
-ideal_w = h - 105
-st.info(f"💡 الوزن المثالي المقترح لكِ عالمياً هو: {ideal_w} كجم")
+    ideal_w = h - 105
+    bmi = w / ((h/100)**2)
 
-# --- القسم 2: عداد الماء والكاميرا الخلفية ---
+    # ذكاء اصطناعي لتشخيص الحالة
+    if bmi > 25:
+        diagnosis = "تحتاجين لتركيز عالي على حرق الدهون (Cardio)."
+        advice = "يرجى اختيار تمارين الحرق المكثف."
+    elif 18.5 <= bmi <= 24.9:
+        diagnosis = "جسمك في حالة ممتازة ومثالية!"
+        advice = "ركزي على نحت العضلات ومرونة الجسم."
+    else:
+        diagnosis = "تحتاجين لزيادة الكتلة العضلية والتغذية."
+        advice = "ركزي على التمارين الهادئة والقوة."
+
+    st.info(f"📋 تشخيص الـ AI: {diagnosis}\n\n💡 نصيحة المدرب: {advice}")
+
+# --- قسم ترشيح الفيديوهات الذكي ---
 st.divider()
-st.subheader("💧 شرب الماء وتوثيق الوجبات")
-if 'water' not in st.session_state: st.session_state.water = 0
+st.subheader("🎯 اطلبي من الـ AI تمرينك اليوم")
+user_input = st.text_input("صفي شعورك أو هدفك اليوم (مثلاً: أريد نحت الخصر أو حرق دهون البطن):")
 
+if user_input:
+    st.write("🔄 جاري تحليل حالتك وترشيح الفيديو الأنسب...")
+    
+    # محرك الترشيح بناءً على التشخيص والكلمات
+    if any(x in user_input for x in ["نحت", "خصر", "بيلاتس", "جمال"]):
+        video_url = "https://www.youtube.com/watch?v=3Pr6n-nKnAA"
+        video_title = "تمرين Emi Wong العالمي لنحت القوام (الأكثر ملاءمة لحالتك)"
+    elif any(x in user_input for x in ["حرق", "دهون", "وزن", "كارديو"]):
+        video_url = "https://www.youtube.com/watch?v=2MoGxae-zyo"
+        video_title = "تحدي Chloe Ting العالمي لحرق الدهون (المناسب لتشخيصك)"
+    else:
+        video_url = "https://www.youtube.com/watch?v=v2r0zYnFmxo"
+        video_title = "تمارين الشد الشاملة للمدربة سارة"
+
+    st.success(f"✅ تم العثور على أفضل تطابق: {video_title}")
+    st.link_button("▶️ ابدئي التمرين الآن", video_url)
+
+# --- بقية الميزات (الماء والكاميرا) ---
+st.divider()
 col_w, col_cam = st.columns(2)
 with col_w:
-    if st.button("🥤 إضافة كوب ماء"):
-        st.session_state.water += 1
-    st.write(f"الأكواب: {st.session_state.water} / 12")
+    if 'w' not in st.session_state: st.session_state.w = 0
+    if st.button("💧 إضافة كوب ماء"): st.session_state.w += 1
+    st.write(f"الماء: {st.session_state.w}/12")
 
 with col_cam:
-    food_photo = st.camera_input("📷 تصوير الوجبة (خلفية)")
+    st.camera_input("📷 سجل الوجبات (خلفية)")
 
-# --- القسم 3: التمارين العالمية الموثوقة ---
-st.divider()
-st.subheader("🤖 ترشيح التمارين (محتوى عالمي)")
-plan = st.text_area("ما هو هدف تمرين اليوم؟ (مثلاً: نحت، حرق، شد)")
-
-if plan:
-    if any(word in plan.lower() for word in ["نحت", "خصر"]):
-        url = "https://www.youtube.com/watch?v=3Pr6n-nKnAA" # Emi Wong
-        st.success("تم اختيار تمرين 'Emi Wong' العالمي لنحت الخصر")
-    else:
-        url = "https://www.youtube.com/watch?v=2MoGxae-zyo" # Chloe Ting
-        st.success("تم اختيار تحدي 'Chloe Ting' لحرق الدهون")
-    st.link_button("▶️ ابدأ التمرين الآن", url)
-
-st.sidebar.markdown(f"### سجل زهور ✨\nالوزن: {w} كجم\nالهدف: {ideal_w} كجم")
+st.sidebar.markdown(f"### 📊 ملخص زهور\nالوزن: {w}\nالمثالي: {ideal_w}\nالحالة: {diagnosis.split(' ')[0]}")
