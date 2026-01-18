@@ -1,94 +1,82 @@
 import streamlit as st
 import time
-from datetime import datetime
 
-# 1. إعدادات الواجهة الرياضية والوضوح العالي
-st.set_page_config(page_title="Zuhour Fitness 2026", page_icon="⚡", layout="centered")
+# 1. التنسيق الرياضي المتقدم
+st.set_page_config(page_title="Zuhour Fitness 2026", layout="centered")
 
 st.markdown("""
     <style>
-    .block-container {padding-top: 1.5rem;}
     .stApp { background: linear-gradient(135deg, #00B4DB 0%, #0083B0 100%); }
-    
-    /* بطاقات بيضاء وخط أسود داكن جداً للوضوح */
     div[data-testid="stVerticalBlock"] > div {
         background-color: #FFFFFF !important; 
-        border-radius: 20px;
-        padding: 20px;
-        margin-bottom: 12px;
-        border-right: 10px solid #FF8C00;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        border-radius: 20px; padding: 25px;
+        border-right: 12px solid #FF8C00;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
-    
-    h1, h2, h3, p, label, span, div { 
-        color: #000000 !important; 
-        font-weight: 900 !important;
-    }
-
+    h1, h2, h3, p, label { color: #000000 !important; font-weight: 900 !important; }
     .stButton > button {
-        background-color: #FF8C00 !important; 
-        color: #FFFFFF !important;
-        border-radius: 12px;
-        border: 2px solid #000000;
-        font-weight: bold;
-        height: 50px;
-        width: 100%;
+        background-color: #FF8C00 !important; color: white !important;
+        font-weight: bold; height: 55px; width: 100%; border: 2px solid #000;
     }
     </style>
     """, unsafe_allow_html=True)
 
-st.title("⚡ تطبيق زهور للرشاقة 2026")
+st.title("⚡ مدربكِ الشخصي الذكي 2026")
 
-# 2. عداد الماء
-if 'water' not in st.session_state:
-    st.session_state.water = 0
+# 2. خانة الهدف القابلة للتغيير (التحديث الجديد)
+st.subheader("🎯 حددي هدفكِ الشخصي")
+col1, col2 = st.columns(2)
 
-st.subheader("💧 عداد شرب الماء")
-c1, c2 = st.columns([2, 1])
-with c1: st.write(f"أكواب الماء: {st.session_state.water} / 12")
-with c2: 
-    if st.button("➕ إضافة كوب"): st.session_state.water += 1
-st.progress(min(st.session_state.water / 12, 1.0))
+with col1:
+    current_weight = st.number_input("الوزن الحالي (كجم):", min_value=30.0, max_value=200.0, value=65.0, step=0.1)
+with col2:
+    target_weight = st.number_input("الوزن المستهدف (كجم):", min_value=30.0, max_value=200.0, value=55.0, step=0.1)
+
+# حساب المتبقي
+to_lose = current_weight - target_weight
+
+if to_lose > 0:
+    st.warning(f"💪 متبقي لكِ {to_lose:.1f} كجم للوصول للهدف. أنتِ قادرة على فعلها!")
+    # شريط تقدم وهمي للتحفيز
+    progress = max(0, min(100, int((target_weight / current_weight) * 100)))
+    st.write("مستوى القرب من الوزن المثالي:")
+    st.progress(progress)
+elif to_lose == 0:
+    st.success("🎉 مبروك! لقد وصلتِ لوزنكِ المثالي. حافظي عليه!")
+else:
+    st.info(f"✨ أنتِ تحت الوزن المستهدف بـ {abs(to_lose):.1f} كجم. ركزي على بناء العضلات!")
 
 st.divider()
 
-# 3. ميزة ذكاء اصطناعي (ترشيح الفيديوهات)
-st.subheader("📝 دمج خطة AI الخارجية")
-ai_plan = st.text_area("ألصقي خطتكِ هنا لتحليلها:", placeholder="مثلاً: تمارين خصر وأرداف...")
+# 3. ميزة الترشيح الذكي (روابط 2026 نشطة)
+st.subheader("📝 ترشيح التمارين بناءً على خطتكِ")
+ai_plan = st.text_area("ألصقي خطتكِ هنا لتحليلها وترشيح فيديو مناسب:", height=100)
 
 if ai_plan:
-    st.markdown("### 🤖 ترشيح المدرب:")
     if any(word in ai_plan.lower() for word in ["نحت", "بيلاتس", "خصر"]):
-        url = "https://www.youtube.com/watch?v=NxX9p8W09I8"
-        msg = "تم ترشيح فيديو بيلاتس لنحت الجسم."
+        video_url = "https://www.youtube.com/watch?v=U4_lVjsOVBs"
+        message = "✅ تمرين النحت والبيلاتس المخصص لكِ جاهز"
     elif any(word in ai_plan.lower() for word in ["حرق", "كارديو", "وزن"]):
-        url = "https://www.youtube.com/watch?v=2MoGxae-zyo"
-        msg = "تم ترشيح فيديو كارديو مكثف."
+        video_url = "https://www.youtube.com/watch?v=v2r0zYnFmxo"
+        message = "✅ تمرين الكارديو وحرق الدهون المكثف جاهز"
     else:
-        url = f"https://www.youtube.com/results?search_query={ai_plan}"
-        msg = "سأبحث لكِ عن أفضل التمارين لخطتكِ."
-    
-    st.success(msg)
-    st.link_button("▶️ ابدأ التمرين المرشح الآن", url)
+        video_url = f"https://www.youtube.com/results?search_query={ai_plan}"
+        message = "✅ تم العثور على تمارين تناسب خطتكِ"
+
+    st.success(message)
+    st.link_button("🚀 ابدئي التمرين الآن", video_url)
 
 st.divider()
 
-# 4. جدول التمارين (Toggle)
-show_plan = st.toggle("🏋️‍♀️ عرض جدول التمارين اليومي") 
-if show_plan:
-    day = st.selectbox("🎯 اختر اليوم:", ["السبت: خصر وبطن", "الاثنين: أرداف", "الأربعاء: شد كامل"])
-    exercise_urls = {
-        "السبت: خصر وبطن": "https://www.youtube.com/watch?v=cIuiQyfKBTg",
-        "الاثنين: أرداف": "https://www.youtube.com/watch?v=hpyT2v04Bj0",
-        "الأربعاء: شد كامل": "https://www.youtube.com/watch?v=Im3PXoLmyx8"
+# 4. جدول التمارين الأسبوعي
+if st.toggle("🏋️‍♀️ عرض الجدول الأسبوعي"):
+    day = st.selectbox("🎯 اختر اليوم:", ["السبت: خصر وبطن", "الاثنين: كارديو", "الأربعاء: شد كامل"])
+    urls = {
+        "السبت: خصر وبطن": "https://www.youtube.com/watch?v=0cwkkKjvAjE",
+        "الاثنين: كارديو": "https://www.youtube.com/watch?v=5JY9FZATqVA",
+        "الأربعاء: شد كامل": "https://www.youtube.com/watch?v=W2VEUWqeS88"
     }
-    st.link_button("📺 فتح فيديو الجدول", exercise_urls[day])
+    st.link_button("📺 فتح الفيديو", urls[day])
 
-st.divider()
-
-# 5. القياسات والهدف
-h = st.number_input("الطول (سم):", value=160)
-w = st.number_input("الوزن الحالي (كجم):", value=60.0)
-st.success("💡 استمري يا زهور للوصول لوزن 55 كجم!")
-
-st.sidebar.info("زهور فيتنس 2026 • وضوح فائق وروابط نشطة")
+st.sidebar.write(f"👤 مستخدم التطبيق الحالي")
+st.sidebar.info(f"الهدف الحالي: {target_weight} كجم")
